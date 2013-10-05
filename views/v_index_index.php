@@ -1,5 +1,5 @@
 <p>
-	Hello World22! You have successfully spawned a new application.
+	Hello World World! You have successfully spawned a new application.
 </p>
 
 <p>
