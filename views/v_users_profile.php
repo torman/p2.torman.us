@@ -1,3 +1,3 @@
-<h1>This is the profile of <?php $user->first_name;?></h1>
+<h1>This is the profile of <?php echo $user->first_name;?></h1>
 
 

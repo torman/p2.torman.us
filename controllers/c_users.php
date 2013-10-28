@@ -19,7 +19,6 @@ class  users_controller extends base_controller {
 
 		$this->template->title = "Profile of " . $this->user->first_name;
 		
-
 		$client_files_head = Array("/css/profile.css");
 		$this->template->client_files_head = Utils::load_client_files($client_files_head);
 
@@ -57,13 +56,24 @@ class  users_controller extends base_controller {
 		# create an encrypted token via email address and a arandom string 
 		$_POST['token'] = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
 
-
 		# insert the user into database
 		$user_id = DB::instance(DB_NAME)->insert('users', $_POST);
 
 		# want to see the output; should comment out later
-		echo "user ID is $user_id";
+		echo "user ID is $user_id <br>";
 		echo "You're signed up";
+
+		# login after the user signed in and redirect to home page
+		# retrieve the token from database
+		$q = "SELECT token FROM users WHERE email = '"  
+				. $_POST['email'] . "'"
+				. " AND "
+				. "password = '" 
+				. $_POST['password'] . "'"; 
+
+		$token = DB::instance(DB_NAME)->select_field($q);
+		setcookie('token', $token, strtotime('+2 week'), '/');
+		Router::redirect("/");
 	}
 
 	public function login() {
