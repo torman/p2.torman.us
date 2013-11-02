@@ -14,19 +14,20 @@
 
     <div id='menu'>
 
-        <a href='/'>Home</a>
+        <a href='/'>Home</a>&nbsp;
 
         <!-- Menu for users who are logged in -->
         <?php if($user): ?>
 
-            <a href='/users/logout'>Logout</a>
-            <a href='/users/profile'>Profile</a>
-            <a href='/posts/add'>Add Post</a>
-			
+            <a href='/users/logout'>Logout</a>&nbsp;
+            <a href='/users/profile'>Profile</a>&nbsp;
+            <a href='/posts/add'>Add Post</a>&nbsp;
+			<a href='/posts/myposts'>My Posts</a>&nbsp;
+			<a href='/posts/users'>Bonjourer</a>			
         <!-- Menu options for users who are not logged in -->
         <?php else: ?>
 
-            <a href='/users/signup'>Sign up</a>
+            <a href='/users/signup'>Sign up</a>&nbsp;
             <a href='/users/login'>Log in</a>
 
         <?php endif; ?>
@@ -34,6 +35,8 @@
     </div>
 
     <br>
+	
+	<?php if(isset($message)) echo $message; ?>
 
 	<?php if(isset($content)) echo $content; ?>
 

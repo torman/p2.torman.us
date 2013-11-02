@@ -6,6 +6,7 @@ class base_controller {
 	public $userObj;
 	public $template;
 	public $email_template;
+	public $message;
 
 	/*-------------------------------------------------------------------------------------------------
 
@@ -24,6 +25,8 @@ class base_controller {
 								
 		# So we can use $user in views			
 			$this->template->set_global('user', $this->user);
+			
+			$this->template->set_global('message', $this->message);
 			
 	}
 	

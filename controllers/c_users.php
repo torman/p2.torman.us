@@ -18,6 +18,115 @@ class  users_controller extends base_controller {
 		$this->template->content = View::instance('v_users_profile');
 
 		$this->template->title = "Profile of " . $this->user->first_name;
+
+		// echo '<pre>';
+		// print_r($_POST);
+		// echo '<pre>';
+
+		$client_files_head = Array("/css/profile.css");
+		$this->template->client_files_head = Utils::load_client_files($client_files_head);
+
+		$client_files_body = Array("/js/profile.min.js");
+		$this->template->client_files_body = Utils::load_client_files($client_files_body);
+
+// echo '<pre>';
+// print_r($this->user);
+// echo '</pre>';
+
+		echo $this->template;
+		
+		// echo "End of profile page";
+	}
+
+	public function profile_edit ($user_name = NULL) {
+
+		# if the user has not logged in, redirect to login page
+		if (!$this->user) {
+			Router::redirect('/users/login');
+		}
+
+		#build user profile edit view
+		$this->template->content = View::instance('v_users_profile_edit');
+
+		$this->template->title = "Edit profile of " . $this->user->first_name;
+
+		
+		// echo '<pre>';
+		// print_r($_POST);
+		// echo '<pre>';
+
+		$client_files_head = Array("/css/profile.css");
+		$this->template->client_files_head = Utils::load_client_files($client_files_head);
+
+		$client_files_body = Array("/js/profile.min.js");
+		$this->template->client_files_body = Utils::load_client_files($client_files_body);
+
+// echo '<pre>';
+// print_r($this->user);
+// echo '</pre>';
+
+		echo $this->template;
+	}
+	
+	public function p_profile_edit ($user_name = NULL) {
+
+		// don't upate if password doesn't match password
+		// the user might have entered a password which s/he doesn't want
+		// retrun to profile edit form
+		if ($_POST['password'] != $_POST['password2']) { 
+			$error = TRUE; 
+			$this->template->message = "Password not matched.";
+			Router::redirect("/users/profile_edit");
+		}
+		
+		// if all fields are empty, redirect to /users/profile_edit
+		if (!isset($_POST)) {
+			Router::redirect("/users/profile_edit");
+		}
+		// we only update those fields are not empty
+		# Sanitize the user input from profile edit form
+		$_POST = DB::instance(DB_NAME)->sanitize($_POST);
+
+		# hash the password submitted by the user
+		$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
+
+		// don't update the field password2, no such field in database
+		unset($_POST['password2']); 
+
+	
+		$index = 0;
+		$s = "";
+
+// echo '<pre>';
+// print_r($_POST);
+// echo '<pre>';
+		
+		foreach ($_POST as $key=>$value) {
+			// prepend a comma in front, but not the first item.
+			if ($index != 0) {
+				$s = $s . ",";
+			}
+			$s = $s . " $key " . "= '" . $value . "'";
+			$index++;
+		}
+
+		$_POST['modified'] = Time::now();
+		$s = $s . ', modified = ' . $_POST['modified'];
+
+		$q = "UPDATE users SET " . $s . " WHERE user_id = " .
+				$this->user->user_id ;
+		
+		// echo $q;
+		DB::instance(DB_NAME)->query($q);
+
+		$q = "SELECT token FROM users WHERE email = '"  
+				. $_POST['email'] . "'"
+				. " AND "
+				. "password = '" 
+				. $_POST['password'] . "'"; 
+
+		$token = DB::instance(DB_NAME)->select_field($q);
+		setcookie('token', $token, strtotime('+2 week'), '/');
 		
 		$client_files_head = Array("/css/profile.css");
 		$this->template->client_files_head = Utils::load_client_files($client_files_head);
@@ -25,12 +134,12 @@ class  users_controller extends base_controller {
 		$client_files_body = Array("/js/profile.min.js");
 		$this->template->client_files_body = Utils::load_client_files($client_files_body);
 
-		//$this->template->content->user_name= $this->user->first_name;
 // echo '<pre>';
 // print_r($this->user);
 // echo '</pre>';
 
-		echo $this->template;
+		// go back profile page after upated
+		Router::redirect("/users/profile");
 	}
 
 	public function signup() {
