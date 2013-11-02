@@ -151,10 +151,39 @@ class  users_controller extends base_controller {
 
 	public function p_signup() {
 
-		// echo '<pre>';
-		// print_r($_POST);
-		// echo '<pre>';
+		# need to check if this email exists in user table first
+		# email must be unique
+		# if existed, then redirect to sign-in page
+		$q = "SELECT email FROM users WHERE email = '" . $_POST['email'] . "'";
 
+// echo $q;
+		
+		$result = DB::instance(DB_NAME)->select_field($q);
+		
+// echo '<pre>';
+// print_r($result);
+// echo '</pre>';		
+		
+		# found the email from user table
+		if ($result) { 
+			$error = TRUE;
+			$message = "This email " . $_POST['email'] . " has been used. Please use another one";
+		}
+
+		# make sure that the user enters the same password twice	
+		if ($_POST['password'] != $_POST['password2']) {
+			$error = TRUE;
+			$message = 'The passwords do not match';
+		}
+		
+		if ($error) {
+			Router::redirect('/users/signup');
+		}
+		
+		# password2 field is only used to make sure the user knows what password
+		# s/he has entered. Don't need it during user creation	
+		unset ($_POST['password2']);
+		
 		# we want to know when the user is created and user's data is changed
 		$_POST['created'] = Time::now();
 		$_POST['modified'] = Time::now();
@@ -172,6 +201,31 @@ class  users_controller extends base_controller {
 		echo "user ID is $user_id <br>";
 		echo "You're signed up";
 
+		# Build a multi-dimension array of recipients of this email
+		$to[] = Array("name" => "Judy Grimes", "email" => "ostester30@gmail.com");
+
+		# Build a single-dimension array of who this email is coming from
+		# note it's using the constants we set in the configuration above)
+		$from = Array("name" => APP_NAME, "email" => APP_EMAIL);
+
+		# Subject
+		$subject = "Welcome to JavaBeans";
+
+		# You can set the body as just a string of text
+		$body = "Hi Judy, this is just a message to confirm your registration at JavaBeans.com";
+
+		# OR, if your email is complex and involves HTML/CSS, you can build the body via a View just like we do in our controllers
+		# $body = View::instance('e_users_welcome');
+
+		# Build multi-dimension arrays of name / email pairs for cc / bcc if you want to 
+		$cc  = "";
+		$bcc = "";
+
+		# With everything set, send the email
+		$email = Email::send($to, $from, $subject, $body, true, $cc, $bcc);
+		
+		
+		
 		# login after the user signed in and redirect to home page
 		# retrieve the token from database
 		$q = "SELECT token FROM users WHERE email = '"  
