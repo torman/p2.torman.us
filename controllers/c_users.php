@@ -198,10 +198,10 @@ class  users_controller extends base_controller {
 		$user_id = DB::instance(DB_NAME)->insert('users', $_POST);
 
 		# want to see the output; should comment out later
-		echo "user ID is $user_id <br>";
-		echo "You're signed up";
-		echo "A message to confirm your registration is emailed to you.";
-		sleep(2);
+		// echo "user ID is $user_id <br>";
+		// echo "You're signed up";
+		// echo "A message to confirm your registration is emailed to you.";
+		// sleep(2);
 
 		// # Build a multi-dimension array of recipients of this email
 		$full_name = $_POST['first_name'] . " " . $_POST['last_name'];
