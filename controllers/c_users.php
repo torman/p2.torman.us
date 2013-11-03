@@ -204,8 +204,10 @@ class  users_controller extends base_controller {
 		sleep(2);
 
 		// # Build a multi-dimension array of recipients of this email
-		$to[] = Array("name" => "$_POST['first_name'] $_POST['last_name']",
-						"email" => "$_POST['email']");
+		$full_name = $_POST['first_name'] . " " . $_POST['last_name'];
+		
+		$to[] = Array("name" => $full_name,
+						"email" => $_POST['email']);
 
 		// # Build a single-dimension array of who this email is coming from
 		// # note it's using the constants we set in the configuration above)
@@ -215,7 +217,7 @@ class  users_controller extends base_controller {
 		$subject = "Welcome to " . APP_NAME;
 
 		// # You can set the body as just a string of text
-		$body = "Hi $_POST['first_name'], this is just a message to confirm your registration at ". APP_NAME;
+		$body = "Hi " . $_POST['first_name'] . ", this is just a message to confirm your registration at ". APP_NAME;
 
 		// # OR, if your email is complex and involves HTML/CSS, you can build the body via a View just like we do in our controllers
 		// # $body = View::instance('e_users_welcome');
