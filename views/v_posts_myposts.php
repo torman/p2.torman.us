@@ -4,7 +4,7 @@
 
     <p><?php echo $post['content']?></p>
 
-    <time datetime="<?php echo Time::display($post['modified'],'Y-m-d G:i')?>">
+    <time datetime="<?php echo Time::display($post['modified'],'Y-m-d G:i')?>" id="post_modified">
         <?php echo Time::display($post['modified'])?>
     </time>
 	&nbsp;

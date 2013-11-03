@@ -8,6 +8,8 @@
 <li>Like feature: "Like" link below each post in this page</li>
 
 </ul>
+<hr>
+
 <h1>Welcome to <?php echo APP_NAME;?><?php if($user) echo ', '.$user->first_name; ?></h1>
 
 <?php if ($user) { ?>
@@ -19,14 +21,13 @@
 
 		<p><?php echo $post['content']?></p>
 
-		<time datetime="<?php echo Time::display($post['created'],'Y-m-d G:i')?>">
-			<?php echo Time::display($post['created'])?>
-		</time>
-
 	</article>
+
+		<time datetime="<?php echo Time::display($post['created'],'Y-m-d G:i')?>" id="post_modified">
+			<?php echo Time::display($post['created'])?>
+		</time>&nbsp;&nbsp;
 	
-	<a href='/posts/like/<?php echo $post['post_id']; ?>/
-				<?php echo $post['num_like']; ?>'>Like</a>&nbsp
+	<a href='/posts/like/<?php echo $post['post_id']; ?>/<?php echo $post['num_like']; ?>'>Like</a>&nbsp
 	<?php echo $post['num_like']; ?>
 	<hr>
 	<?php endforeach; ?>

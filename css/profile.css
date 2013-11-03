@@ -1,1 +1,19 @@
-body {background-color:yellow;}
+body {background-color:#D8D8D8;}
+
+#menu { 
+font-family: Arial;
+font-weight: bold;
+height: 30px; 
+background-color:#A4A4A4; 
+text-transform:uppercase;
+vertical-align: middle; 
+}
+
+#menu_last_item { position:fixed; right: 15px;}
+
+#profile_pos { position:fixed; right: 100px;}
+
+#post_modified {
+font-size: 12px; 
+color:#585858;
+}

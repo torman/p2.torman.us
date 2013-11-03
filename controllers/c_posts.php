@@ -34,8 +34,7 @@ class posts_controller extends base_controller {
         # Note we didn't have to sanitize any of the $_POST data because we're using the insert method which does it for us
         DB::instance(DB_NAME)->insert('posts', $_POST);
 
-        # Quick and dirty feedback
-        echo "Your post has been added. <a href='/posts/add'>Add another</a>";
+ 		Router::redirect('/posts/myposts');
     }
 
 	public function index() {
@@ -43,15 +42,6 @@ class posts_controller extends base_controller {
 		# Set up the View
 		$this->template->content = View::instance('v_posts_index');
 		$this->template->title   = "Posts";
-
-		# Build the query
-		// $q = "SELECT 
-				// posts .* , 
-				// users.first_name, 
-				// users.last_name
-			// FROM posts
-			// INNER JOIN users 
-				// ON posts.user_id = users.user_id";
 
     $q = 'SELECT 
             posts.content,
@@ -117,6 +107,10 @@ class posts_controller extends base_controller {
 		# Run the query
 		$post = DB::instance(DB_NAME)->select_row($q);
 
+// echo "<pre>";		
+// print_r($post);
+// echo "</pre>";		
+		
 		# Pass data to the View
 		$this->template->content->post = $post;
 
@@ -188,6 +182,9 @@ class posts_controller extends base_controller {
 		# Pass data (users and connections) to the view
 		$this->template->content->users       = $users;
 		$this->template->content->connections = $connections;
+
+		$client_files_head = Array("/css/posts_users.css");
+		$this->template->client_files_head = Utils::load_client_files($client_files_head);
 
 		# Render the view
 		echo $this->template;
